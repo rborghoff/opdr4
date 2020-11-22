@@ -20,9 +20,10 @@ class PPSTest {
         employee3 = new Employee(88808, 30);
         pps = new PPS.Builder()
                     .addEmployee(employee1)
+                    .addEmployee(employee2)
                     .addEmployee(employee3)
                     .addProject(project1, employee1)
-                    .addProject(project2, new Employee(60006))
+                    .addProject(project2, employee1)
                         .addProject(project3, employee2)
                         .addCommitment("P1001", 60006, 4)
                         .addCommitment("P1001", 77007, 3)

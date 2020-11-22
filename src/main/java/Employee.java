@@ -100,8 +100,7 @@ public class Employee implements Comparable<Employee> {
         return assignedProjects;
     }
 
-
-  // Below are helper attributes and methods for sample generation
+// Below are helper attributes and methods for sample generation
     // and XML import and export
 
     public static Set<Employee> importEmployeesFromXML(XMLParser xmlParser, Set<Employee> employees,
@@ -176,4 +175,5 @@ public class Employee implements Comparable<Employee> {
             assignedProjects.add(project);
         }
     }
+
 }

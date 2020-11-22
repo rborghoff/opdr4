@@ -5,6 +5,7 @@ import javax.xml.stream.XMLStreamConstants;
 import java.time.Month;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class PPS {
 
@@ -44,8 +45,14 @@ public class PPS {
 
         System.out.printf("%d employees have been assigned to %d projects:\n\n",
                 employees.size(), projects.size());
+        System.out.printf("\n1. The average hourly wage of all employees is %.2f%%" , this.calculateAverageHourlyWage());
+        System.out.printf("\n2. The longest project is \'%s\' with %d available workingdays",this.calculateLongestProject(),this.calculateLongestProject().getNumWorkingDays());
+        System.out.printf("\n3. The follow employees have the broadest assignment in no less then %d different projects: %s",this.mostProjects(),this.calculateMostInvolvedEmployees().toString());
+        System.out.printf("\n4. The total budget of committed project manpower is %d",this.calculateTotalManpowerBudget());
+        System.out.printf("\n5. Below is an overview of the total managed budget by junior employees (hourly wage <= 26): %s","TODO");
+        System.out.printf("\n6. Below is an overview of employees working at least 8 hours per day: %s","TODO");
+        System.out.printf("\n7. Below is a overview of cumulative monthly project spends: %s\n","TODO");
 
-        // TODO calculate and display statistics
 
     }
 
@@ -54,8 +61,9 @@ public class PPS {
      * @return
      */
     public double calculateAverageHourlyWage() {
-        // TODO
-        return 0.0;
+
+        return (double) this.employees.stream().mapToInt(Employee::getHourlyWage).sum()/this.employees.size() ;
+
     }
 
     /**
@@ -64,8 +72,10 @@ public class PPS {
      * @return
      */
     public Project calculateLongestProject() {
-        // TODO
-        return null;
+        if(this.projects.size() != 0) {
+            Project project = this.projects.stream().reduce((p1, p2) -> (p1.getNumWorkingDays() > p2.getNumWorkingDays() ? p1 : p2)).get();
+            return project;
+        }return null;
     }
 
     /**
@@ -77,7 +87,12 @@ public class PPS {
      */
     public int calculateTotalManpowerBudget() {
         // TODO
-        return 0;
+        return this.projects.stream().mapToInt(Project::calculateManpowerBudget).sum();
+    }
+
+
+    private int mostProjects(){
+        return this.employees.stream().reduce((e1,e2) ->(e1.getAssignedProjects().size() > e2.getAssignedProjects().size() ? e1:e2)).get().getAssignedProjects().size();
     }
 
     /**
@@ -87,8 +102,8 @@ public class PPS {
      * @return
      */
     public Set<Employee> calculateMostInvolvedEmployees() {
-        // TODO
-        return null;
+        Set <Employee> result = employees.stream().filter(employee -> employee.getAssignedProjects().size()== mostProjects()).collect(Collectors.toSet());
+        return result;
     }
 
     /**
@@ -120,7 +135,9 @@ public class PPS {
      * @return
      */
     public Set<Employee> getFulltimeEmployees() {
-        // TODO
+        
+
+
         return Set.of();
     }
 
@@ -138,13 +155,22 @@ public class PPS {
             pps = new PPS();
         }
 
+        private Employee getEmployee(int code){
+            for (Employee a : this.pps.employees){
+                if (a.getNumber() ==(code)){
+                    return a;
+                }
+            }
+            return null;
+        }
+
         /**
          * Add another employee to the PPS being build
          * @param employee
          * @return
          */
         public Builder addEmployee(Employee employee) {
-            // TODO
+          this.pps.employees.add(employee);
             return this;
         }
 
@@ -156,7 +182,9 @@ public class PPS {
          * @return
          */
         public Builder addProject(Project project, Employee manager) {
-            // TODO
+            this.pps.projects.add(project);
+            manager.getManagedProjects().add(project);
+            manager.getAssignedProjects().add(project);
             return this;
         }
 
@@ -171,7 +199,12 @@ public class PPS {
          * @return
          */
         public Builder addCommitment(String projectCode, int employeeNr, int hoursPerDay) {
-            // TODO
+            this.pps.projects.forEach(a->{
+                        if(a.getCode().equals(projectCode)){
+                            a.addCommitment(getEmployee(employeeNr),hoursPerDay);
+                        }
+                    }
+            );
             return this;
         }
 

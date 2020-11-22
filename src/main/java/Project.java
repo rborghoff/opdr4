@@ -95,8 +95,8 @@ public class Project implements Comparable<Project> {
      * @param hoursPerDay
      */
     public void addCommitment(Employee employee, int hoursPerDay) {
-       this.getCommittedHoursPerDay().putIfAbsent(employee,hoursPerDay);
-
+        this.getCommittedHoursPerDay().merge(employee,hoursPerDay,Integer::sum);
+//        this.getCommittedHoursPerDay().putIfAbsent(employee,hoursPerDay);
 
         // also register this project assignment for this employee,
         // in case that had not been done before
