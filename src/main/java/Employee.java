@@ -44,13 +44,31 @@ public class Employee implements Comparable<Employee> {
 
     @Override
     public int compareTo(Employee o) {
-        return number - o.number;
+      return number - o.number;
     }
 
-    // TODO make sure Employees can be printed. The format is 'name(number)'
+  @Override
+  public boolean equals(Object obj) {
+    return this.name.equals(((Employee)obj).name);
+  }
 
-    // TODO make sure Employees can be added to a HashMap, HashSet
-    //  every employee shall have a unique number
+  @Override
+  public String toString() {
+    return
+      name +
+        '('+  number +
+        ")"
+      ;
+  }
+
+  @Override
+  public int hashCode(){
+      int hash = 37;
+      hash = 31 * hash + this.name.hashCode();
+      hash = 31 * hash + this.number;
+      hash = 31 * hash + hourlyWage;
+      return hash;
+  }
 
     /**
      * Calculates the total budget of all committed manpower
@@ -59,8 +77,7 @@ public class Employee implements Comparable<Employee> {
      * @return
      */
     public int calculateManagedBudget() {
-        // TODO
-        return 0;
+        return getManagedProjects().stream().mapToInt(Project::calculateManpowerBudget).sum();
     }
 
     public int getNumber() {
@@ -83,14 +100,7 @@ public class Employee implements Comparable<Employee> {
         return assignedProjects;
     }
 
-  @Override
-  public String toString() {
-    return
-       name +
-        '('+  number +
-        ")"
-      ;
-  }
+
   // Below are helper attributes and methods for sample generation
     // and XML import and export
 

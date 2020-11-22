@@ -41,5 +41,6 @@ class ProjectTest {
         assertEquals((3*20+4*30)*project1.getNumWorkingDays(), project1.calculateManpowerBudget(),"manpower budget project1");
         assertEquals((1*20+8*40)*project2.getNumWorkingDays(), project2.calculateManpowerBudget(),"manpower budget project2");
         assertEquals(0, project3.calculateManpowerBudget(),"manpower budget project3");
+
     }
 }

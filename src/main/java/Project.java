@@ -68,12 +68,25 @@ public class Project implements Comparable<Project> {
         return Calendar.getWorkingDays(this.startDate, this.endDate);
     }
 
-    // TODO make sure Projects can be printed. The format is 'title(code)'
+  @Override
+  public String toString() {
+    return
+      title +"("+
+       code +")" ;
+  }
+  @Override
+  public int hashCode(){
+    int hash = 37;
+    hash = 31 * hash + this.title.hashCode();
+    hash = 31 * hash + this.code.hashCode();
+    return hash;
+  }
 
-    // TODO make sure Projects can be added to a HashMap, HashSet
-    //  every project shall have a unique code
-
-    /**
+  @Override
+  public boolean equals(Object obj) {
+    return this.title.equals(((Project)obj).title);
+  }
+  /**
      * add the specified hoursPerDay commitment for the specified employee on the project
      * these hours should be added to any existing commitment of the employee on the project
      * there is no check on maximum allocation of hours per day;
@@ -82,7 +95,7 @@ public class Project implements Comparable<Project> {
      * @param hoursPerDay
      */
     public void addCommitment(Employee employee, int hoursPerDay) {
-        // TODO
+       this.getCommittedHoursPerDay().putIfAbsent(employee,hoursPerDay);
 
 
         // also register this project assignment for this employee,
@@ -97,9 +110,20 @@ public class Project implements Comparable<Project> {
      * @return
      */
     public int calculateManpowerBudget() {
-        // TODO
-        return 0;
+      int result =0;
+
+      for (Map.Entry<Employee, Integer> entry : this.getCommittedHoursPerDay().entrySet()) {
+        Employee k = entry.getKey();
+        Integer salaris = k.getHourlyWage();
+        Integer v = entry.getValue();
+        result += salaris * v;
+      }
+      int endresult = result * this.getNumWorkingDays();
+
+
+      return endresult;
     }
+
 
     public String getCode() {
         return code;
