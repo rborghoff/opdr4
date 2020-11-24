@@ -96,7 +96,6 @@ public class Project implements Comparable<Project> {
      */
     public void addCommitment(Employee employee, int hoursPerDay) {
         this.getCommittedHoursPerDay().merge(employee,hoursPerDay,Integer::sum);
-//        this.getCommittedHoursPerDay().putIfAbsent(employee,hoursPerDay);
 
         // also register this project assignment for this employee,
         // in case that had not been done before
@@ -124,7 +123,6 @@ public class Project implements Comparable<Project> {
       return endresult;
     }
 
-
     public String getCode() {
         return code;
     }
@@ -144,6 +142,7 @@ public class Project implements Comparable<Project> {
     public Map<Employee, Integer> getCommittedHoursPerDay() {
         return committedHoursPerDay;
     }
+
 
     // Below are helper attributes and methods for sample generation
     // and XML import and export

@@ -77,7 +77,7 @@ public class Employee implements Comparable<Employee> {
      * @return
      */
     public int calculateManagedBudget() {
-        return getManagedProjects().stream().mapToInt(Project::calculateManpowerBudget).sum();
+        return this.getManagedProjects().stream().mapToInt(Project::calculateManpowerBudget).sum();
     }
 
     public int getNumber() {

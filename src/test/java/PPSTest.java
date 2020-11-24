@@ -46,7 +46,7 @@ class PPSTest {
     void checkStatistics_e1_p1() {
         PPS pps = PPS.importFromXML("HvA2011_e1_p1.xml");
 
-        pps.printPlanningStatistics();
+//        pps.printPlanningStatistics();
 
         assertEquals(67.0, pps.calculateAverageHourlyWage(),"average hourly rate");
         assertEquals("Workspace rearrangement - BPH-08(P100618)", pps.calculateLongestProject().toString(),"longest project");
@@ -57,7 +57,7 @@ class PPSTest {
     void checkStatistics_e2_p2() {
         PPS pps = PPS.importFromXML("HvA2012_e2_p2.xml");
 
-        pps.printPlanningStatistics();
+//        pps.printPlanningStatistics();
 
         assertEquals(27.5, pps.calculateAverageHourlyWage(),"average hourly rate");
         assertEquals("Virtual workplaces - LWB-09(P100029)", pps.calculateLongestProject().toString(),"longest project");
@@ -68,7 +68,7 @@ class PPSTest {
     void checkStatistics_e5_p5() {
         PPS pps = PPS.importFromXML("HvA2015_e5_p5.xml");
 
-        pps.printPlanningStatistics();
+//        pps.printPlanningStatistics();
 
         assertEquals(50.4, pps.calculateAverageHourlyWage(),"average hourly rate");
         assertEquals("Floor insulation - BPH-05(P100575)", pps.calculateLongestProject().toString(),"longest project");

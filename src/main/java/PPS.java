@@ -1,14 +1,17 @@
+import utils.Calendar;
 import utils.SLF4J;
 import utils.XMLParser;
 
 import javax.xml.stream.XMLStreamConstants;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class PPS {
-
+    private final int fulltime = 8;
     private static Random randomizer = new Random(06112020);
 
     private String name;                // the name of the planning system refers to its xml source file
@@ -50,8 +53,9 @@ public class PPS {
         System.out.printf("\n3. The follow employees have the broadest assignment in no less then %d different projects: %s",this.mostProjects(),this.calculateMostInvolvedEmployees().toString());
         System.out.printf("\n4. The total budget of committed project manpower is %d",this.calculateTotalManpowerBudget());
         System.out.printf("\n5. Below is an overview of the total managed budget by junior employees (hourly wage <= 26): %s","TODO");
-        System.out.printf("\n6. Below is an overview of employees working at least 8 hours per day: %s","TODO");
+        System.out.printf("\n6. Below is an overview of employees working at least 8 hours per day: %s",getFulltimeEmployees().toString());
         System.out.printf("\n7. Below is a overview of cumulative monthly project spends: %s\n","TODO");
+
 
 
     }
@@ -87,6 +91,14 @@ public class PPS {
      */
     public int calculateTotalManpowerBudget() {
         // TODO
+//        Map<Employee, Integer> test = new TreeMap<>() ;
+//        for (Employee employee : this.employees){
+//          Integer iets = employee.getAssignedProjects().stream().mapToInt(Project::calculateManpowerBudget).sum();
+//          test.merge(employee,iets,Integer::sum);
+//          test.putIfAbsent(employee,iets);
+//        }
+//        int sum = test.values().stream().reduce(0,Integer::sum);
+//        return sum;
         return this.projects.stream().mapToInt(Project::calculateManpowerBudget).sum();
     }
 
@@ -102,6 +114,8 @@ public class PPS {
      * @return
      */
     public Set<Employee> calculateMostInvolvedEmployees() {
+
+
         Set <Employee> result = employees.stream().filter(employee -> employee.getAssignedProjects().size()== mostProjects()).collect(Collectors.toSet());
         return result;
     }
@@ -130,15 +144,53 @@ public class PPS {
 
     }
 
+    public LocalDate getFirstDate(){
+      LocalDate vroegsteDatum = null;
+      for (Project project: this.projects){
+        if (vroegsteDatum == null){
+          vroegsteDatum = project.getStartDate();
+        }else if(project.getStartDate().isBefore(vroegsteDatum)){
+          vroegsteDatum = project.getStartDate();
+        }}
+      return vroegsteDatum;
+    }
+    public LocalDate getLastDate(){
+      LocalDate laatsteDatum = null;
+      for (Project project: this.projects){
+        if (laatsteDatum == null){
+          laatsteDatum = project.getEndDate();
+        }else if(project.getStartDate().isAfter(laatsteDatum)){
+          laatsteDatum = project.getEndDate();
+        }}
+      return laatsteDatum;
+    }
     /**
      * Returns a set containing all the employees that work at least fulltime for at least one day per week on a project.
      * @return
      */
     public Set<Employee> getFulltimeEmployees() {
-        
+      Set LocalDate = Calendar.getWorkingDays(getFirstDate(),getLastDate());
 
 
-        return Set.of();
+      Map <Employee,Integer> temp = new TreeMap<>();
+    for (Project project: this.projects){
+      for(Map.Entry<Employee, Integer> entry :project.getCommittedHoursPerDay().entrySet()){
+        Employee employee = entry.getKey();
+        Integer uren = entry.getValue();
+        temp.merge(employee,uren,Integer::sum);
+      }
+    }
+
+    Set<Employee> set = new TreeSet<>();
+    for( Map.Entry<Employee,Integer> setup : temp.entrySet()){
+      Employee a = setup.getKey();
+      Integer b = setup.getValue();
+      if (b >= fulltime){
+        set.add(a);
+      }
+    }
+
+        return set;
     }
 
     public String getName() {
