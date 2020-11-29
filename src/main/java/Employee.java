@@ -99,6 +99,9 @@ public class Employee implements Comparable<Employee> {
     public Set<Project> getAssignedProjects() {
         return assignedProjects;
     }
+    public boolean hasProjects(){
+        return !this.getManagedProjects().isEmpty();
+    }
 
 // Below are helper attributes and methods for sample generation
     // and XML import and export

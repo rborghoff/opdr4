@@ -66,7 +66,7 @@ public class PPS {
      */
     public double calculateAverageHourlyWage() {
 
-        return (double) this.employees.stream().mapToInt(Employee::getHourlyWage).sum()/this.employees.size() ;
+        return  this.employees.stream().mapToDouble(Employee::getHourlyWage).sum()/this.employees.size() ;
 
     }
 
@@ -99,7 +99,8 @@ public class PPS {
 //        }
 //        int sum = test.values().stream().reduce(0,Integer::sum);
 //        return sum;
-        return this.projects.stream().mapToInt(Project::calculateManpowerBudget).sum();
+      return this.calculateManagedBudgetOverview(Employee::hasProjects).values().stream().reduce(0,Integer::sum);
+//        return this.projects.stream().mapToInt(Project::calculateManpowerBudget).sum();
     }
 
 
@@ -128,8 +129,13 @@ public class PPS {
      * @return
      */
     public Map<Employee,Integer> calculateManagedBudgetOverview(Predicate<Employee> filter) {
-        // TODO
-        return null;
+        Map<Employee,Integer>result = new TreeMap<>();
+        for (Employee employee :this.employees){
+            if (filter.test(employee)){
+                result.put(employee,employee.calculateManagedBudget());
+            }
+        }
+        return result;
     }
 
     /**
@@ -139,57 +145,31 @@ public class PPS {
      * @return
      */
     public Map<Month,Integer> calculateCumulativeMonthlySpends() {
-        // TODO
+      this.projects.stream().filter(a -> a.getWorkingDays().)
+
         return null;
 
     }
 
-    public LocalDate getFirstDate(){
-      LocalDate vroegsteDatum = null;
-      for (Project project: this.projects){
-        if (vroegsteDatum == null){
-          vroegsteDatum = project.getStartDate();
-        }else if(project.getStartDate().isBefore(vroegsteDatum)){
-          vroegsteDatum = project.getStartDate();
-        }}
-      return vroegsteDatum;
-    }
-    public LocalDate getLastDate(){
-      LocalDate laatsteDatum = null;
-      for (Project project: this.projects){
-        if (laatsteDatum == null){
-          laatsteDatum = project.getEndDate();
-        }else if(project.getStartDate().isAfter(laatsteDatum)){
-          laatsteDatum = project.getEndDate();
-        }}
-      return laatsteDatum;
-    }
+
+
     /**
      * Returns a set containing all the employees that work at least fulltime for at least one day per week on a project.
      * @return
      */
     public Set<Employee> getFulltimeEmployees() {
-      Set LocalDate = Calendar.getWorkingDays(getFirstDate(),getLastDate());
 
+        Set<Employee> set = new TreeSet<>();
+        for (Project project: projects){
+            for (Map.Entry<Employee, Integer> entry : project.getCommittedHoursPerDay().entrySet()) {
+                Employee k = entry.getKey();
+                Integer v = entry.getValue();
+                if (v >= fulltime){
+                    set.add(k);
 
-      Map <Employee,Integer> temp = new TreeMap<>();
-    for (Project project: this.projects){
-      for(Map.Entry<Employee, Integer> entry :project.getCommittedHoursPerDay().entrySet()){
-        Employee employee = entry.getKey();
-        Integer uren = entry.getValue();
-        temp.merge(employee,uren,Integer::sum);
-      }
-    }
-
-    Set<Employee> set = new TreeSet<>();
-    for( Map.Entry<Employee,Integer> setup : temp.entrySet()){
-      Employee a = setup.getKey();
-      Integer b = setup.getValue();
-      if (b >= fulltime){
-        set.add(a);
-      }
-    }
-
+                }
+            }
+        }
         return set;
     }
 
