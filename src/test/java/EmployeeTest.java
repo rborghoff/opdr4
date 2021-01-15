@@ -1,7 +1,10 @@
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ObjectStreamClass;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,8 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EmployeeTest {
     private Project project1, project2, project3;
     private Employee employee1, employee1a, employee2, employee3;
+    Set <Project> projects = new HashSet<>();
 
-    @BeforeEach
+
+  @BeforeEach
     private void setup() {
         employee1 = new Employee(900001,20);
         employee1a = new Employee(900001,20);
@@ -27,6 +32,8 @@ class EmployeeTest {
         project1.addCommitment(employee2,4);
         project2.addCommitment(employee1,1);
         project2.addCommitment(employee3,8);
+        projects.add(project1);
+        projects.add(project2);
     }
 
     @Test
@@ -43,4 +50,5 @@ class EmployeeTest {
         assertEquals((3*20+4*30)*project1.getNumWorkingDays()+(1*20+8*40)*project2.getNumWorkingDays(), employee1.calculateManagedBudget(),"managed budget");
         assertEquals(0, employee2.calculateManagedBudget(),"managed budget");
     }
+
 }

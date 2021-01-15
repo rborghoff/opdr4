@@ -64,9 +64,9 @@ public class Employee implements Comparable<Employee> {
   @Override
   public int hashCode(){
       int hash = 37;
-      hash = 31 * hash + this.name.hashCode();
+      if(!this.name.isBlank()){
+      hash = 31 * hash + this.name.hashCode();}
       hash = 31 * hash + this.number;
-      hash = 31 * hash + hourlyWage;
       return hash;
   }
 

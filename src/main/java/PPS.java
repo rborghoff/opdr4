@@ -52,9 +52,10 @@ public class PPS {
         System.out.printf("\n2. The longest project is \'%s\' with %d available workingdays",this.calculateLongestProject(),this.calculateLongestProject().getNumWorkingDays());
         System.out.printf("\n3. The follow employees have the broadest assignment in no less then %d different projects: %s",this.mostProjects(),this.calculateMostInvolvedEmployees().toString());
         System.out.printf("\n4. The total budget of committed project manpower is %d",this.calculateTotalManpowerBudget());
-        System.out.printf("\n5. Below is an overview of the total managed budget by junior employees (hourly wage <= 26): %s","TODO");
+        System.out.printf("\n5. Below is an overview of the total managed budget by junior employees (hourly wage <= 26): %s",calculateMPBJunior());
         System.out.printf("\n6. Below is an overview of employees working at least 8 hours per day: %s",getFulltimeEmployees().toString());
-        System.out.printf("\n7. Below is a overview of cumulative monthly project spends: %s\n","TODO");
+        System.out.printf("\n7. Below is a overview of cumulative monthly project spends: %s\n","TODO\n");
+      System.out.println(test());
 
 
 
@@ -90,17 +91,19 @@ public class PPS {
      * @return
      */
     public int calculateTotalManpowerBudget() {
-        // TODO
-//        Map<Employee, Integer> test = new TreeMap<>() ;
-//        for (Employee employee : this.employees){
-//          Integer iets = employee.getAssignedProjects().stream().mapToInt(Project::calculateManpowerBudget).sum();
-//          test.merge(employee,iets,Integer::sum);
-//          test.putIfAbsent(employee,iets);
-//        }
-//        int sum = test.values().stream().reduce(0,Integer::sum);
-//        return sum;
+
       return this.calculateManagedBudgetOverview(Employee::hasProjects).values().stream().reduce(0,Integer::sum);
-//        return this.projects.stream().mapToInt(Project::calculateManpowerBudget).sum();
+
+    }
+
+    public Set<String> calculateMPBJunior(){
+      Set<String> result=new HashSet<>();
+      Set<Employee> juniors = new HashSet<>();
+      juniors = this.employees.stream().filter(a -> a.getHourlyWage() <= 26).collect(Collectors.toSet());
+      for (Employee j: juniors){
+       result.add(j.toString()+" = "+ j.calculateManagedBudget()) ;
+      }
+      return result;
     }
 
 
@@ -138,6 +141,8 @@ public class PPS {
         return result;
     }
 
+
+
     /**
      * Calculates and overview of total monthly spends across all projects in the system
      * The monthly spend of a single project is the accumulated manpower cost of all employees assigned to the
@@ -145,12 +150,28 @@ public class PPS {
      * @return
      */
     public Map<Month,Integer> calculateCumulativeMonthlySpends() {
-      this.projects.stream().filter(a -> a.getWorkingDays().)
+      Map <Month,Integer> result = new TreeMap<>();
+        for (Project project:this.projects){
+          project.getWorkingDays().contains(Month.JANUARY);
+        }
+
 
         return null;
 
     }
 
+
+    public int test(){
+      int i = 0;
+      int result=0;
+      for (Project project:this.projects){
+
+      }
+      for (Employee employee: this.employees){
+        result = result + (i*employee.getHourlyWage());
+      }
+      return result;
+    }
 
 
     /**
