@@ -54,10 +54,7 @@ public class PPS {
         System.out.printf("\n4. The total budget of committed project manpower is %d",this.calculateTotalManpowerBudget());
         System.out.printf("\n5. Below is an overview of the total managed budget by junior employees (hourly wage <= 26): %s",calculateMPBJunior());
         System.out.printf("\n6. Below is an overview of employees working at least 8 hours per day: %s",getFulltimeEmployees().toString());
-        System.out.printf("\n7. Below is a overview of cumulative monthly project spends: %s\n","TODO\n");
-      System.out.println(test());
-
-
+        System.out.printf("\n7. Below is a overview of cumulative monthly project spends: %s\n",calculateCumulativeMonthlySpends());
 
     }
 
@@ -152,25 +149,19 @@ public class PPS {
     public Map<Month,Integer> calculateCumulativeMonthlySpends() {
       Map <Month,Integer> result = new TreeMap<>();
         for (Project project:this.projects){
-          project.getWorkingDays().contains(Month.JANUARY);
+            int daylyBudget =0;
+            for (Map.Entry<Employee, Integer> entry : project.getCommittedHoursPerDay().entrySet()){
+                Employee k = entry.getKey();
+                Integer v = entry.getValue();
+                daylyBudget += (v * k.getHourlyWage());
+
+          }
+            for (LocalDate date : project.getWorkingDays()){
+                result.merge(date.getMonth(),daylyBudget,Integer::sum);
+
+            }
         }
-
-
-        return null;
-
-    }
-
-
-    public int test(){
-      int i = 0;
-      int result=0;
-      for (Project project:this.projects){
-
-      }
-      for (Employee employee: this.employees){
-        result = result + (i*employee.getHourlyWage());
-      }
-      return result;
+        return result;
     }
 
 
@@ -179,7 +170,6 @@ public class PPS {
      * @return
      */
     public Set<Employee> getFulltimeEmployees() {
-
         Set<Employee> set = new TreeSet<>();
         for (Project project: projects){
             for (Map.Entry<Employee, Integer> entry : project.getCommittedHoursPerDay().entrySet()) {
@@ -192,10 +182,6 @@ public class PPS {
             }
         }
         return set;
-    }
-
-    public String getName() {
-        return name;
     }
 
     /**
