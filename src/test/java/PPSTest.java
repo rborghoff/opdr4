@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PPSTest {
     Project project1, project2, project3;
@@ -45,9 +46,7 @@ class PPSTest {
     @Test
     void checkStatistics_e1_p1() {
         PPS pps = PPS.importFromXML("HvA2011_e1_p1.xml");
-
-//        pps.printPlanningStatistics();
-
+        pps.printPlanningStatistics();
         assertEquals(67.0, pps.calculateAverageHourlyWage(),"average hourly rate");
         assertEquals("Workspace rearrangement - BPH-08(P100618)", pps.calculateLongestProject().toString(),"longest project");
         assertEquals(4154, pps.calculateTotalManpowerBudget(),"total manpower budget");
@@ -56,9 +55,7 @@ class PPSTest {
     @Test
     void checkStatistics_e2_p2() {
         PPS pps = PPS.importFromXML("HvA2012_e2_p2.xml");
-
-//        pps.printPlanningStatistics();
-
+        pps.printPlanningStatistics();
         assertEquals(27.5, pps.calculateAverageHourlyWage(),"average hourly rate");
         assertEquals("Virtual workplaces - LWB-09(P100029)", pps.calculateLongestProject().toString(),"longest project");
         assertEquals(27225, pps.calculateTotalManpowerBudget(),"total manpower budget");
@@ -67,11 +64,24 @@ class PPSTest {
     @Test
     void checkStatistics_e5_p5() {
         PPS pps = PPS.importFromXML("HvA2015_e5_p5.xml");
-
-//        pps.printPlanningStatistics();
-
+        pps.printPlanningStatistics();
         assertEquals(50.4, pps.calculateAverageHourlyWage(),"average hourly rate");
         assertEquals("Floor insulation - BPH-05(P100575)", pps.calculateLongestProject().toString(),"longest project");
         assertEquals(159441, pps.calculateTotalManpowerBudget(),"total manpower budget");
     }
+
+
+    @Test
+    void calculateAverageHourlyWage() {
+        PPS test = new PPS.Builder().build();
+        assertEquals(0.0,test.calculateAverageHourlyWage());
+    }
+
+    @Test
+    void calculateLongestProject(){
+        assertEquals(project1,pps.calculateLongestProject());
+        PPS test = new PPS.Builder().build();
+        assertNull(test.calculateLongestProject());
+    }
+
 }

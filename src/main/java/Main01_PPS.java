@@ -6,7 +6,7 @@ public class Main01_PPS {
         pps1.printPlanningStatistics();
 
 //        // import the configuration from the XML
-//        PPS pps2 = PPS.importFromXML("HvA2019_e50_p100.xml");
-//        pps2.printPlanningStatistics();
+        PPS pps2 = PPS.importFromXML("HvA2019_e50_p100.xml");
+        pps2.printPlanningStatistics();
     }
 }

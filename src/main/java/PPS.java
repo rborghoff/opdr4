@@ -63,7 +63,10 @@ public class PPS {
      * @return
      */
     public double calculateAverageHourlyWage() {
-
+        // niet de netste manier maar ook niet onwaar, zonder werknemers zijn de kosten ook 0
+        if (this.employees.size() == 0){
+            return 0.0;
+        }
         return  this.employees.stream().mapToDouble(Employee::getHourlyWage).sum()/this.employees.size() ;
 
     }
@@ -74,6 +77,7 @@ public class PPS {
      * @return
      */
     public Project calculateLongestProject() {
+
         if(this.projects.size() != 0) {
             Project project = this.projects.stream().reduce((p1, p2) -> (p1.getNumWorkingDays() > p2.getNumWorkingDays() ? p1 : p2)).get();
             return project;
@@ -95,8 +99,11 @@ public class PPS {
 
     public Set<String> calculateMPBJunior(){
       Set<String> result=new HashSet<>();
+      //temp voor de loop
       Set<Employee> juniors = new HashSet<>();
+      //verkrijg alle medewerkers met minimum loon
       juniors = this.employees.stream().filter(a -> a.getHourlyWage() <= 26).collect(Collectors.toSet());
+      // maakt een printbare string van de medewerkers met minumumloon en het budget.
       for (Employee j: juniors){
        result.add(j.toString()+" = "+ j.calculateManagedBudget()) ;
       }
@@ -115,8 +122,6 @@ public class PPS {
      * @return
      */
     public Set<Employee> calculateMostInvolvedEmployees() {
-
-
         Set <Employee> result = employees.stream().filter(employee -> employee.getAssignedProjects().size()== mostProjects()).collect(Collectors.toSet());
         return result;
     }
@@ -130,6 +135,7 @@ public class PPS {
      */
     public Map<Employee,Integer> calculateManagedBudgetOverview(Predicate<Employee> filter) {
         Map<Employee,Integer>result = new TreeMap<>();
+
         for (Employee employee :this.employees){
             if (filter.test(employee)){
                 result.put(employee,employee.calculateManagedBudget());
@@ -149,13 +155,16 @@ public class PPS {
     public Map<Month,Integer> calculateCumulativeMonthlySpends() {
       Map <Month,Integer> result = new TreeMap<>();
         for (Project project:this.projects){
+            // een temp om bij te houden wat het dagelijks budget is
             int daylyBudget =0;
+            //loop door de key value sets heen
             for (Map.Entry<Employee, Integer> entry : project.getCommittedHoursPerDay().entrySet()){
                 Employee k = entry.getKey();
                 Integer v = entry.getValue();
                 daylyBudget += (v * k.getHourlyWage());
 
           }
+            //loo door de werkdagen en teld de dayly budgetten bij de mand op
             for (LocalDate date : project.getWorkingDays()){
                 result.merge(date.getMonth(),daylyBudget,Integer::sum);
 
